@@ -323,38 +323,156 @@ $(".madre").change(function (e) {
 });
 
 function consultar(d1) {
- 
-        var rut = $('#run').val();
-        var d = d1.split(';');
-        d[0] = d[0].replace('rutaca', rut);
-        d[1] = d[1].replace('rutaca', rut);
-        
-        console.log("aprete buscar "+JSON.stringify(d))
+    
+    var rut_original = $('#run').val();
+    rut = rut_original.split('-');
+    rut = rut[0];
+    var d = d1.split(';');
+    d[0] = d[0].replace('rutaca', rut);
+    d[1] = d[1].replace('rutaca', rut);
+
+    // document.getElementById("formularioPaciente").reset();
+    // $('#run').val(rut_original);
+        console.log("busquedas "+JSON.stringify(d))
         if (rut != '') {
             // BUSCO EN BASE DATOS MAESTRO
+            console.log("buscando en "+JSON.stringify(d[0]))
             $.ajax({
                 type: 'GET',
                 url: d[0],
                 success: function (data) {
                     if (typeof data === 'string') {
                         if (data == 'No se encuentra este paciente') {
-                            toastr.info('No se encontró paciente en los registros, Buscando en Fonasa');
+                            // toastr.info('No se encontró paciente en los registros');
                         } else {
                             toastr.info('Base de datos inaccesible,  Buscando en Fonasa');
                         }
                         //BUSCO EN BASE DATOS FONASA
+
+                        console.log("buscando en "+JSON.stringify(d[1]));
                         $.ajax({
                             type: 'GET',
                             url: d[1],
                             success: function (data) {
+                                
                                 if (data == "error conexion fonasa") {
                                     toastr.warning('No es posible conectar con Fonasa');
-                                }else 
+                                }
+                                else{
                                     if (data == "Rut no existe en la Base Datos.") {
                                         toastr.warning('No existe el paciente en los registros de Fonasa');
-                                    }else {
-                                        // USUARIO ENCONTRADO en FONASA
-                                        toastr.success('Paciente encontrado FONASA!');
+                                    }
+                                    else {
+
+// USUARIO ENCONTRADO en FONASA
+
+$("#rut_existe").val(true);
+toastr.success('Paciente encontrado!');
+datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
+resp_original = data['RESPUESTA_ORIGINAL'];
+// console.log(data);
+
+var pacienteFonasa={}
+
+
+if (datos_afiliado['tramo'] != ' ') {
+    pacienteFonasa.prevision = 'FONASA';
+    pacienteFonasa.tramo = datos_afiliado['tramo'];
+    pacienteFonasa.prais = resp_original['descprais'];
+} else {
+    pacienteFonasa.prevision = 'ISAPRE';
+    pacienteFonasa.tramo = '';
+    pacienteFonasa.prais = resp_original['descprais'];
+}
+
+// console.log(pacienteFonasa);
+
+document.getElementById("formularioPaciente").reset();
+$('#run').val(rut_original);
+
+$("#nombres").val(data['nombres']);
+$("#apellido_paterno").val(data['apellido_paterno']);
+$("#apellido_materno").val(data['apellido_materno']);
+$("#fechaNacimiento").val(data['fecha_nacimiento'].split('-').reverse().join('-'));
+
+// console.log(data['genero']);
+// var genero_val
+
+switch(data['genero']) {
+    case "M":
+        genero_val="1";
+        break;
+    case "F":
+        genero_val="2";
+        break;
+    default:
+        genero_val="3";
+} 
+// console.log(genero_val);
+
+
+$("#genero option[value="+genero_val+"]").prop('selected',true).change();
+
+//  $("#prevision option[value="+data['prevision_id']+"]").attr("selected",'select').change();
+
+switch(pacienteFonasa.prevision) {
+    case "FONASA":
+        document.getElementById("prevision").options[1].selected=true;
+        break;
+    case "ISAPRE":
+        console.log("aqui")
+        document.getElementById("prevision").options[2].selected=true;
+        break;
+    default:
+        document.getElementById("prevision").options[0].selected=true;
+} 
+
+switch( pacienteFonasa.tramo) {
+    case 0:
+        document.getElementById("tramo").options[5].selected=true;
+        break;
+    case "A":
+        document.getElementById("tramo").options[1].selected=true;
+        break;
+    case "B":
+        document.getElementById("tramo").options[2].selected=true;
+        break;
+    case "C":
+        document.getElementById("tramo").options[3].selected=true;
+        break;
+    case "D":
+        document.getElementById("tramo").options[4].selected=true;
+        break;
+    default:
+        document.getElementById("tramo").options[5].selected=true;
+} 
+
+// // PRAIS VARIABLE SIN PARAMETRIZACION HAY Q REVISAR
+// // FUNCIONARIO VARIABLE NO ALCANZADA EN FONASA
+
+
+$("#comuna option[value="+data['comuna_id']+"]").prop('selected',true);
+
+
+var direccion=document.getElementById("direccion");
+direccion.value=data['direccion'];
+
+// var numero=document.getElementById("numero");
+// numero.value=data['numero'];
+
+$("#telefono").val(data['telefono']);
+
+if(data['telefono2']!=0 && data['telefono2']!=null){
+    $("#telefono2").val(data['telefono2']);
+}else{ $("#telefono2").val(null);}
+
+if(data['email']!=0 && data['email']!=null){
+    $("#email").val(data['email']);
+}
+
+// $("#active option[value="+data['active']+"]").prop('selected',true);
+
+                                        // toastr.success('Paciente encontrado FONASA!');
                                         // datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
                                         // resp_original = data['RESPUESTA_ORIGINAL'];
                                         // console.log(data);
@@ -367,6 +485,8 @@ function consultar(d1) {
                                         //     tramo = '';
                                         //     prais = resp_original['descprais'];
                                         // }
+
+
                                         // $("#prevision").val(prevision);
                                         // $("#tramo").val(tramo);
                                         // $("#prais").val(prais);
@@ -407,42 +527,97 @@ function consultar(d1) {
                                         // document.getElementById('apellido_materno').readOnly = true;
                                         // document.getElementById('fecha_nacimiento').readOnly = true;
                                         // document.getElementById('edad').readOnly = true;
+                            // }
                                     }
-    
+                               
+                                }
+                            
+                            },
+                            error: function ($e) {
+                                console.log("error en peticion ajax fonasa")
                             }
-                        });
+                    });
                     }else {
-                        // USUARIO ENCONTRADO EN BASE DATOS MAESTRO
-                        toastr.success('Paciente encontrado MAESTRO!');
-                        // edad = data['edad'];
-                        // comuna = data['desc_comuna'];
-                        // cod_comuna = data['cod_comuna'];
-                        // data = data[0];
-                        // $("#nombres").val(data['nombre']);
-                        // $("#apellido_paterno").val(data['apMaterno']);
-                        // $("#apellido_materno").val(data['apMaterno']);
-    
-                        // $masculino = document.getElementById("masculino");
-                        // $femenino = document.getElementById("femenino");
-                        // $trans = document.getElementById("trans");
-    
-                        // $masculino.checked = false;
-                        // $femenino.checked = false;
-                        // $trans.checked = false;
-                        // if (data['genero_id'] == 1) {
-                        //     $masculino.checked = true;
-                        // } else {
-                        //     $femenino.checked = true;
-                        // }
-                        // // $("#edad").val(edad);
-                        // $("#fecha_nacimiento").val(data['fechaNacimiento'].split('-').reverse().join('/'));
-                        // $("#fecha_nacimiento").trigger('change');
-                        // $("#telefono").val(data['telefono']);
-                        // $("#cod_comuna").val(data['comuna_id']);
-                        // $("#direccion").val(data['direccion'] + ' ' + data['numero']);
-                        // $("#numero_direccion").val(data['numero']);
-                        // $("#paciente").val(data['id']);
-    
+                    // USUARIO ENCONTRADO EN BASE DATOS MAESTRO
+                    console.log("encontrado en maestra "+JSON.stringify(data))
+                
+                    $("#rut_existe").val(true);
+                    toastr.success('Paciente encontrado!');
+                    edad = data['edad'];
+                    comuna = data['desc_comuna'];
+                    cod_comuna = data['cod_comuna'];
+                    data = data[0];
+                    $("#nombres").val(data['nombre']);
+                    $("#apellido_paterno").val(data['apMaterno']);
+                    $("#apellido_materno").val(data['apMaterno']);
+                    $("#fechaNacimiento").val(data['fechaNacimiento'].split('-').reverse().join('-'));
+                    
+                    switch(data['genero_id']) {
+                        case 1:
+                            document.getElementById("genero").options[3].selected=true;
+                            break;
+                        case 2:
+                            document.getElementById("genero").options[2].selected=true;
+                            break;
+                        default:
+                            document.getElementById("genero").options[4].selected=true;
+                    } 
+
+                    $("#prevision option[value="+data['prevision_id']+"]").attr("selected",'select').change();
+                    // document.getElementById("prevision").options[3].selected=true;
+                    
+                    switch(data['tramo_id']) {
+                        case 0:
+                            document.getElementById("tramo").options[5].selected=true;
+                            break;
+                        case 1:
+                            document.getElementById("tramo").options[1].selected=true;
+                            break;
+                        case 2:
+                            document.getElementById("tramo").options[2].selected=true;
+                            break;
+                        case 3:
+                            document.getElementById("tramo").options[3].selected=true;
+                            break;
+                        case 4:
+                            document.getElementById("tramo").options[4].selected=true;
+                            break;
+                        default:
+                            document.getElementById("tramo").options[5].selected=true;
+                    } 
+                    
+                    $("#prais option[value="+data['prais']+"]").attr('selected','select').change();
+                    // console.log( $('#prais').val());
+
+                    // $("#prais option[value="+data['des_comuna']+"]").attr('selected','select').change();
+                    
+                    if(data['funcionario']==1){
+                            console.log("aqui");
+                            $("#funcionario option[value=1]").prop('selected',true);
+                    }else{
+                        $("#funcionario option[value=0]").prop('selected',true);
+                    }
+                    
+                    $("#comuna option[value="+data['comuna_id']+"]").prop('selected',true);
+                    $("#via option[value="+data['via_id']+"]").prop('selected',true);
+                    
+                    var direccion=document.getElementById("direccion");
+                    direccion.value=data['direccion'];
+                    
+                    var numero=document.getElementById("numero");
+                    numero.value=data['numero'];
+
+                    $("#telefono").val(data['telefono']);
+
+                    if(data['telefono']!=0 && data['telefono2']!=null){
+                        $("#telefono2").val(data['telefono2']);
+                    }else{ $("#telefono2").val(null);}
+
+                    if(data['email']!=0 && data['email']!=null){
+                        $("#email").val(data['email']);
+                    }
+
+                $("#active option[value="+data['active']+"]").prop('selected',true);
     
                         // document.getElementById("in_comuna").value = comuna;
                         // document.getElementById("tx_comuna").value = comuna;
@@ -463,7 +638,7 @@ function consultar(d1) {
                     }
                 },
                 error: function ($e) {
-                    console.log("error en peticion ajax")
+                    console.log("error en peticion ajax maestro")
                 }
             });
         }

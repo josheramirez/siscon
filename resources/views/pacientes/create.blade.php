@@ -28,7 +28,7 @@
 			<div class="panel panel-default">
                 <div class="panel-heading">Crear Paciente</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ URL::to('pacientes') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ URL::to('pacientes') }}" id="formularioPaciente">
                         {{ csrf_field() }}
 						<div class="col-md-6">
 							<!--Tipo de Documento-->
@@ -70,6 +70,8 @@
 							<input name="rut" id="rut" type="hidden" value="{{ old('rut') }}">
 							<input name="dv" id="dv" type="hidden" value="{{ old('dv') }}">
 							<input name="flujo" id="flujo" type="hidden" value="{{ $flujo }}">
+
+							<input name="rut_existe" id="rut_existe" type="hidden" value=false>
 							
 							<!--Numero de Documento-->
 							<div class="form-group{{ $errors->has('numDoc') ? ' has-error' : '' }}" id="divNumDoc" hidden>
@@ -90,7 +92,7 @@
 								<label for="nombre" class="col-md-4 control-label">Nombre</label>
 
 								<div class="col-md-8">
-									<input id="nombre" type="text" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" class="form-control" name="nombre" value="{{ old('nombre') }}" required autofocus>
+									<input id="nombres" type="text" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" class="form-control" name="nombre" value="{{ old('nombre') }}" required autofocus>
 
 									@if ($errors->has('nombre'))
 										<span class="help-block">
@@ -101,30 +103,30 @@
 							</div>
 							
 							<!--Apellido Paterno-->
-							<div class="form-group{{ $errors->has('apPaterno') ? ' has-error' : '' }}">
-								<label for="apPaterno" class="col-md-4 control-label">Apellido Paterno</label>
+							<div class="form-group{{ $errors->has('apellido_paterno') ? ' has-error' : '' }}">
+								<label for="apellido_paterno" class="col-md-4 control-label">Apellido Paterno</label>
 
 								<div class="col-md-8">
-									<input id="apPaterno" type="text" class="form-control" name="apPaterno" value="{{ old('apPaterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
+									<input id="apellido_paterno" type="text" class="form-control" name="apellido_paterno" value="{{ old('apellido_paterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
 
-									@if ($errors->has('apPaterno'))
+									@if ($errors->has('apellido_paterno'))
 										<span class="help-block">
-											<strong>{{ $errors->first('apPaterno') }}</strong>
+											<strong>{{ $errors->first('apellido_paterno') }}</strong>
 										</span>
 									@endif
 								</div>
 							</div>
 							
 							<!--Apellido Materno-->
-							<div class="form-group{{ $errors->has('apMaterno') ? ' has-error' : '' }}">
-								<label for="apMaterno" class="col-md-4 control-label">Apellido Materno</label>
+							<div class="form-group{{ $errors->has('apellido_materno') ? ' has-error' : '' }}">
+								<label for="apellido_materno" class="col-md-4 control-label">Apellido Materno</label>
 
 								<div class="col-md-8">
-									<input id="apMaterno" type="text" class="form-control" name="apMaterno" value="{{ old('apMaterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
+									<input id="apellido_materno" type="text" class="form-control" name="apellido_materno" value="{{ old('apellido_materno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
 
-									@if ($errors->has('apMaterno'))
+									@if ($errors->has('apellido_materno'))
 										<span class="help-block">
-											<strong>{{ $errors->first('apMaterno') }}</strong>
+											<strong>{{ $errors->first('apellido_materno') }}</strong>
 										</span>
 									@endif
 								</div>
@@ -361,7 +363,10 @@
     </div>
 </div>
 
-<script type="text/javascript" src="{{asset('/MyScripts/solicitud.js')}}"></script>
+<script src="{{asset('/MyScripts/solicitud.js')}}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{asset('/css/toastr.min.css')}}">
+<script type="text/javascript" src="{{asset('/js/toastr.min.js')}}"></script>
 
 <!--verificador RUT-->
 <script>

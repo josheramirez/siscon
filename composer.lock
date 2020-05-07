@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60ddbed103ca85d0f7ae47c0e6f23769",
+    "content-hash": "ef2d3fbb9c33d2e51fdef682de02b507",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -225,6 +225,61 @@
             "time": "2017-09-14T01:36:24+00:00"
         },
         {
+            "name": "econea/nusoap",
+            "version": "v0.9.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pwnlabs/nusoap.git",
+                "reference": "6f9dbb82bdd64d537947707dd7873248aa152003"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pwnlabs/nusoap/zipball/6f9dbb82bdd64d537947707dd7873248aa152003",
+                "reference": "6f9dbb82bdd64d537947707dd7873248aa152003",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "~1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-0.9.x": "0.9.7.x-dev",
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Fixed NuSOAP for PHP 5.6 - 7.3",
+            "homepage": "https://github.com/econea/nusoap",
+            "keywords": [
+                "client",
+                "http",
+                "nusoap",
+                "php",
+                "soap",
+                "transport",
+                "xml"
+            ],
+            "time": "2019-11-20T09:03:39+00:00"
+        },
+        {
             "name": "erusev/parsedown",
             "version": "1.6.3",
             "source": {
@@ -307,6 +362,7 @@
                     "homepage": "http://www.acci.cz"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2014-04-08T15:00:19+00:00"
         },
         {
@@ -351,6 +407,7 @@
                     "homepage": "http://www.acci.cz/"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2015-04-20T18:58:01+00:00"
         },
         {
@@ -409,6 +466,7 @@
                 "serialize",
                 "tokenizer"
             ],
+            "abandoned": "opis/closure",
             "time": "2016-12-07T09:37:55+00:00"
         },
         {
@@ -884,6 +942,7 @@
                 "cron",
                 "schedule"
             ],
+            "abandoned": "dragonmantank/cron-expression",
             "time": "2017-01-23T04:29:33+00:00"
         },
         {
@@ -1170,6 +1229,7 @@
                 "xls",
                 "xlsx"
             ],
+            "abandoned": "phpoffice/phpspreadsheet",
             "time": "2015-05-01T07:00:55+00:00"
         },
         {

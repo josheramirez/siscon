@@ -18,6 +18,8 @@ use DateTime;
 
 use Illuminate\Support\Facades\Auth;
 
+use siscont\Helpers\Helper;
+
 /**
  * Clase Controlador Pacientes
  * Rol: Pacientes
@@ -119,7 +121,16 @@ class PacientesController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::check()) {
+		
+		if (Auth::check()) {
+
+			//en caso que el paciente haya sido encontrado en maestro o en fonasa
+			if($request->input('rut_existe')==true){
+				Helper::actualizarSiscont($request);
+				return redirect('/pacientes')->with('message','actualizado');
+			}
+
+			// pacientes nuevos 
 			//valida si rut existe
 			if ($request->input('tipoDoc') == 1) {
 				$validator2 = validator::make($request->all(), [
@@ -139,7 +150,6 @@ class PacientesController extends Controller
 					}
 				} 			
 			}
-
 
 			//valida tramo
 			if ($request->input('prevision') == 1) {

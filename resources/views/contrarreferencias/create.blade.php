@@ -4,6 +4,8 @@
 <div class="container-fluid">
 	<!--Mensajes de Guardado o Actualización de Contrarreferencia-->
 	<?php $message=Session::get('message') ?>
+
+	<script>console.log($message)</script>
 	@if($message == 'contrarreferencia')
 		<div class="alert alert-success alert-dismissible" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -13,7 +15,6 @@
 		<div class="alert alert-success alert-dismissible" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			Paciente Creado Exitosamente
-		</div>
 	@elseif($message == 'paciente')
 		<div class="alert alert-danger alert-dismissible" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -23,6 +24,11 @@
 		<div class="alert alert-danger alert-dismissible" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			Diagnóstico de Egreso no Existe
+		</div>
+	@elseif($message == 'actualizado')
+		<div class="alert alert-warning alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			Paciente Actualizado Exitosamente
 		</div>
 	@endif
 	<!--Recupera ID de última contrarreferencia-->
