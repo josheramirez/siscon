@@ -548,7 +548,7 @@ if(data['email']!=0 && data['email']!=null){
                     cod_comuna = data['cod_comuna'];
                     data = data[0];
                     $("#nombres").val(data['nombre']);
-                    $("#apellido_paterno").val(data['apMaterno']);
+                    $("#apellido_paterno").val(data['apPaterno']);
                     $("#apellido_materno").val(data['apMaterno']);
                     $("#fechaNacimiento").val(data['fechaNacimiento'].split('-').reverse().join('-'));
                     
