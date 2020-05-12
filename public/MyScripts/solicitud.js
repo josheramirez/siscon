@@ -323,6 +323,11 @@ $(".madre").change(function (e) {
 });
 
 function consultar(d1) {
+
+    if(!Fn.validaRut( $("#run").val().trim())){
+        toastr.warning('Ingresa un Rut correcto');
+        return;
+    }
     
     var rut_original = $('#run').val();
     rut = rut_original.split('-');
@@ -331,227 +336,146 @@ function consultar(d1) {
     d[0] = d[0].replace('rutaca', rut);
     d[1] = d[1].replace('rutaca', rut);
 
-    // document.getElementById("formularioPaciente").reset();
-    // $('#run').val(rut_original);
-        console.log("busquedas "+JSON.stringify(d))
-        if (rut != '') {
-            // BUSCO EN BASE DATOS MAESTRO
-            console.log("buscando en "+JSON.stringify(d[0]))
-            $.ajax({
-                type: 'GET',
-                url: d[0],
-                success: function (data) {
-                    if (typeof data === 'string') {
-                        if (data == 'No se encuentra este paciente') {
-                            // toastr.info('No se encontró paciente en los registros');
-                        } else {
-                            toastr.info('Base de datos inaccesible,  Buscando en Fonasa');
-                        }
-                        //BUSCO EN BASE DATOS FONASA
+    console.log("busquedas "+JSON.stringify(d))
+    if (rut != '') {
+        // BUSCO EN BASE DATOS MAESTRO
+        console.log("buscando en "+JSON.stringify(d[0]))
+        $.ajax({
+            type: 'GET',
+            url: d[0],
+            success: function (data) {
+                if (typeof data === 'string') {
+                    if (data == 'No se encuentra este paciente') {
 
-                        console.log("buscando en "+JSON.stringify(d[1]));
-                        $.ajax({
-                            type: 'GET',
-                            url: d[1],
-                            success: function (data) {
-                                
-                                if (data == "error conexion fonasa") {
-                                    toastr.warning('No es posible conectar con Fonasa');
-                                }
-                                else{
-                                    if (data == "Rut no existe en la Base Datos.") {
-                                        toastr.warning('No existe el paciente en los registros de Fonasa');
-                                    }
-                                    else {
-
-// USUARIO ENCONTRADO en FONASA
-
-$("#rut_existe").val(true);
-toastr.success('Paciente encontrado!');
-datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
-resp_original = data['RESPUESTA_ORIGINAL'];
-// console.log(data);
-
-var pacienteFonasa={}
-
-
-if (datos_afiliado['tramo'] != ' ') {
-    pacienteFonasa.prevision = 'FONASA';
-    pacienteFonasa.tramo = datos_afiliado['tramo'];
-    pacienteFonasa.prais = resp_original['descprais'];
-} else {
-    pacienteFonasa.prevision = 'ISAPRE';
-    pacienteFonasa.tramo = '';
-    pacienteFonasa.prais = resp_original['descprais'];
-}
-
-// console.log(pacienteFonasa);
-
-document.getElementById("formularioPaciente").reset();
-$('#run').val(rut_original);
-
-$("#nombres").val(data['nombres']);
-$("#apellido_paterno").val(data['apellido_paterno']);
-$("#apellido_materno").val(data['apellido_materno']);
-$("#fechaNacimiento").val(data['fecha_nacimiento'].split('-').reverse().join('-'));
-
-// console.log(data['genero']);
-// var genero_val
-
-switch(data['genero']) {
-    case "M":
-        genero_val="1";
-        break;
-    case "F":
-        genero_val="2";
-        break;
-    default:
-        genero_val="3";
-} 
-// console.log(genero_val);
-
-
-$("#genero option[value="+genero_val+"]").prop('selected',true).change();
-
-//  $("#prevision option[value="+data['prevision_id']+"]").attr("selected",'select').change();
-
-switch(pacienteFonasa.prevision) {
-    case "FONASA":
-        document.getElementById("prevision").options[1].selected=true;
-        break;
-    case "ISAPRE":
-        console.log("aqui")
-        document.getElementById("prevision").options[2].selected=true;
-        break;
-    default:
-        document.getElementById("prevision").options[0].selected=true;
-} 
-
-switch( pacienteFonasa.tramo) {
-    case 0:
-        document.getElementById("tramo").options[5].selected=true;
-        break;
-    case "A":
-        document.getElementById("tramo").options[1].selected=true;
-        break;
-    case "B":
-        document.getElementById("tramo").options[2].selected=true;
-        break;
-    case "C":
-        document.getElementById("tramo").options[3].selected=true;
-        break;
-    case "D":
-        document.getElementById("tramo").options[4].selected=true;
-        break;
-    default:
-        document.getElementById("tramo").options[5].selected=true;
-} 
-
-// // PRAIS VARIABLE SIN PARAMETRIZACION HAY Q REVISAR
-// // FUNCIONARIO VARIABLE NO ALCANZADA EN FONASA
-
-
-$("#comuna option[value="+data['comuna_id']+"]").prop('selected',true);
-
-
-var direccion=document.getElementById("direccion");
-direccion.value=data['direccion'];
-
-// var numero=document.getElementById("numero");
-// numero.value=data['numero'];
-
-$("#telefono").val(data['telefono']);
-
-if(data['telefono2']!=0 && data['telefono2']!=null){
-    $("#telefono2").val(data['telefono2']);
-}else{ $("#telefono2").val(null);}
-
-if(data['email']!=0 && data['email']!=null){
-    $("#email").val(data['email']);
-}
-
-// $("#active option[value="+data['active']+"]").prop('selected',true);
-
-                                        // toastr.success('Paciente encontrado FONASA!');
-                                        // datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
-                                        // resp_original = data['RESPUESTA_ORIGINAL'];
-                                        // console.log(data);
-                                        // if (datos_afiliado['tramo'] != ' ') {
-                                        //     prevision = 'FONASA';
-                                        //     tramo = datos_afiliado['tramo'];
-                                        //     prais = resp_original['descprais'];
-                                        // } else {
-                                        //     prevision = 'ISAPRE';
-                                        //     tramo = '';
-                                        //     prais = resp_original['descprais'];
-                                        // }
-
-
-                                        // $("#prevision").val(prevision);
-                                        // $("#tramo").val(tramo);
-                                        // $("#prais").val(prais);
-                                        // toastr.success('Paciente encontrado!');
-                                        // $("#nombres").val(data['nombres']);
-                                        // $("#apellido_paterno").val(data['apellido_paterno']);
-                                        // $("#apellido_materno").val(data['apellido_materno']);
-                                        // $masculino = document.getElementById("masculino");
-                                        // $femenino = document.getElementById("femenino");
-                                        // $trans = document.getElementById("trans");
-        
-                                        // $masculino.checked = false;
-                                        // $femenino.checked = false;
-                                        // $trans.checked = false;
-                                        // if (data['genero'] == "M") {
-                                        //     $masculino.checked = true;
-                                        // } else {
-                                        //     $femenino.checked = true;
-                                        // }
-                                        // // $("#edad").val(data['edad']);
-                                        // $("#fecha_nacimiento").val(data['fecha_nacimiento'].split('-').reverse().join('/'));
-                                        // $("#fecha_nacimiento").trigger('change');
-                                        // $("#telefono").val(data['telefono']);
-                                        // $("#direccion").val(data['direccion']);
-        
-                                        // document.getElementById("in_comuna").value = data['des_comuna'];
-                                        // document.getElementById("tx_comuna").value = data['des_comuna'];
-                                        // $("#comuna").select2("trigger", "select", {
-                                        //     data: { id: data['comuna'], text: data['des_comuna'] }
-                                        // });
-                                        // document.getElementById("cod_comuna").value = data['comuna'];
-        
-                                        // $("#tipo_codigo").val('').trigger('change')
-                                        // document.getElementById("codigo_vih").value = '';
-        
-                                        // document.getElementById('nombres').readOnly = true;
-                                        // document.getElementById('apellido_paterno').readOnly = true;
-                                        // document.getElementById('apellido_materno').readOnly = true;
-                                        // document.getElementById('fecha_nacimiento').readOnly = true;
-                                        // document.getElementById('edad').readOnly = true;
-                            // }
-                                    }
-                               
-                                }
-                            
-                            },
-                            error: function ($e) {
-                                console.log("error en peticion ajax fonasa")
+                    } else {
+                        toastr.info('Base de datos inaccesible,  Buscando en Fonasa');
+                    }
+                    //BUSCO EN BASE DATOS FONASA
+                    console.log("buscando en "+JSON.stringify(d[1]));
+                    $.ajax({
+                        type: 'GET',
+                        url: d[1],
+                        success: function (data) {
+                            if (data == "error conexion fonasa") {
+                                toastr.warning('No es posible conectar con Fonasa');
                             }
+                            else{
+                                if (data == "Rut no existe en la Base Datos.") {
+                                    document.getElementById("formularioPaciente").reset();
+                                    $('#run').val(rut_original);
+                                    toastr.warning('No existe el paciente en los registros de Fonasa');
+                                }
+                                else {
+                                    // USUARIO ENCONTRADO en FONASA
+                                    $("#rut_existe").val(true);
+                                    $("#es_fonasa").val(true);
+                                    toastr.success('Paciente encontrado!');
+                                    datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
+                                    resp_original = data['RESPUESTA_ORIGINAL'];
+                                    
+                                    var pacienteFonasa={}
+
+                                    if (datos_afiliado['tramo'] != ' ') {
+                                        pacienteFonasa.prevision = 'FONASA';
+                                        pacienteFonasa.tramo = datos_afiliado['tramo'];
+                                        pacienteFonasa.prais = resp_original['descprais'];
+                                    } else {
+                                        pacienteFonasa.prevision = 'ISAPRE';
+                                        pacienteFonasa.tramo = '';
+                                        pacienteFonasa.prais = resp_original['descprais'];
+                                    }
+
+                                    document.getElementById("formularioPaciente").reset();
+                                    $('#run').val(rut_original).change();
+
+                                    $("#nombres").val(data['nombres']);
+                                    $("#apPaterno").val(data['apellido_paterno']);
+                                    $("#apMaterno").val(data['apellido_materno']);
+                                    $("#fechaNacimiento").val(data['fecha_nacimiento'].split('-').reverse().join('-'));
+
+                                    switch(data['genero']) {
+                                    case "M":
+                                        genero_val="1";
+                                        break;
+                                    case "F":
+                                        genero_val="2";
+                                        break;
+                                    default:
+                                        genero_val="3";
+                                    } 
+                                    $("#genero option[value="+genero_val+"]").prop('selected',true).change();
+
+                                    switch(pacienteFonasa.prevision) {
+                                    case "FONASA":
+                                        document.getElementById("prevision").options[1].selected=true;
+                                        break;
+                                    case "ISAPRE":
+                                        console.log("aqui")
+                                        document.getElementById("prevision").options[2].selected=true;
+                                        break;
+                                    default:
+                                        document.getElementById("prevision").options[0].selected=true;
+                                    } 
+
+                                    switch( pacienteFonasa.tramo) {
+                                    case 0:
+                                        document.getElementById("tramo").options[5].selected=true;
+                                        break;
+                                    case "A":
+                                        document.getElementById("tramo").options[1].selected=true;
+                                        break;
+                                    case "B":
+                                        document.getElementById("tramo").options[2].selected=true;
+                                        break;
+                                    case "C":
+                                        document.getElementById("tramo").options[3].selected=true;
+                                        break;
+                                    case "D":
+                                        document.getElementById("tramo").options[4].selected=true;
+                                        break;
+                                    default:
+                                        document.getElementById("tramo").options[5].selected=true;
+                                    } 
+
+                                    $("#comuna option[value="+data['comuna_id']+"]").prop('selected',true);
+
+                                    var direccion=document.getElementById("direccion");
+                                    direccion.value=data['direccion'];
+
+                                    $("#telefono").val(data['telefono']);
+
+                                    if(data['telefono2']!=0 && data['telefono2']!=null){
+                                    $("#telefono2").val(data['telefono2']);
+                                    }else{ $("#telefono2").val(null);}
+
+                                    if(data['email']!=0 && data['email']!=null){
+                                    $("#email").val(data['email']);
+                                    }
+                                }
+                                                            
+                            }
+                                                        
+                        },
+                        error: function ($e) {
+                            console.log("error en peticion ajax fonasa")
+                        }
                     });
-                    }else {
+                }else{
                     // USUARIO ENCONTRADO EN BASE DATOS MAESTRO
                     console.log("encontrado en maestra "+JSON.stringify(data))
                 
                     $("#rut_existe").val(true);
+                    $("#es_maestra").val(true);
                     toastr.success('Paciente encontrado!');
                     edad = data['edad'];
                     comuna = data['desc_comuna'];
                     cod_comuna = data['cod_comuna'];
                     data = data[0];
                     $("#nombres").val(data['nombre']);
-                    $("#apellido_paterno").val(data['apPaterno']);
-                    $("#apellido_materno").val(data['apMaterno']);
+                    $("#apPaterno").val(data['apPaterno']);
+                    $("#apMaterno").val(data['apMaterno']);
                     $("#fechaNacimiento").val(data['fechaNacimiento'].split('-').reverse().join('-'));
-                    
+                
                     switch(data['genero_id']) {
                         case 1:
                             document.getElementById("genero").options[3].selected=true;
@@ -564,7 +488,6 @@ if(data['email']!=0 && data['email']!=null){
                     } 
 
                     $("#prevision option[value="+data['prevision_id']+"]").attr("selected",'select').change();
-                    // document.getElementById("prevision").options[3].selected=true;
                     
                     switch(data['tramo_id']) {
                         case 0:
@@ -584,16 +507,12 @@ if(data['email']!=0 && data['email']!=null){
                             break;
                         default:
                             document.getElementById("tramo").options[5].selected=true;
-                    } 
-                    
+                    }
+                                                
                     $("#prais option[value="+data['prais']+"]").attr('selected','select').change();
-                    // console.log( $('#prais').val());
-
-                    // $("#prais option[value="+data['des_comuna']+"]").attr('selected','select').change();
-                    
+           
                     if(data['funcionario']==1){
-                            console.log("aqui");
-                            $("#funcionario option[value=1]").prop('selected',true);
+                        $("#funcionario option[value=1]").prop('selected',true);
                     }else{
                         $("#funcionario option[value=0]").prop('selected',true);
                     }
@@ -617,32 +536,36 @@ if(data['email']!=0 && data['email']!=null){
                         $("#email").val(data['email']);
                     }
 
-                $("#active option[value="+data['active']+"]").prop('selected',true);
-    
-                        // document.getElementById("in_comuna").value = comuna;
-                        // document.getElementById("tx_comuna").value = comuna;
-                        // $("#comuna").select2("trigger", "select", {
-                        //     data: { id: cod_comuna, text: comuna }
-                        // });
-                        // document.getElementById("cod_comuna").value = cod_comuna;
-    
-                        // $("#tipo_codigo").val('').trigger('change')
-                        // document.getElementById("codigo_vih").value = '';
-    
-                        // document.getElementById('nombres').readOnly = true;
-                        // document.getElementById('apellido_paterno').readOnly = true;
-                        // document.getElementById('apellido_materno').readOnly = true;
-                        // document.getElementById('fecha_nacimiento').readOnly = true;
-                        // document.getElementById('edad').readOnly = true;
-    
-                    }
-                },
-                error: function ($e) {
-                    console.log("error en peticion ajax maestro")
+                    $("#active option[value="+data['active']+"]").prop('selected',true);
                 }
-            });
-        }
+            },
+            error: function ($e) {
+                console.log("error en peticion ajax maestro")
+            }
+        });
+    }
     
+}
+
+var Fn = {
+	// Valida el rut con su cadena completa "XXXXXXXX-X"
+	validaRut : function (rutCompleto) {
+		rutCompleto = rutCompleto.replace("‐","-");
+		if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto ))
+			return false;
+		var tmp 	= rutCompleto.split('-');
+		var digv	= tmp[1]; 
+		var rut 	= tmp[0];
+		if ( digv == 'K' ) digv = 'k' ;
+		
+		return (Fn.dv(rut) == digv );
+	},
+	dv : function(T){
+		var M=0,S=1;
+		for(;T;T=Math.floor(T/10))
+			S=(S+T%10*(9-M++%6))%11;
+		return S?S-1:'k';
+	}
 }
 
 function consultar2(d1) {
@@ -855,16 +778,16 @@ function formatearRut(run) {
     return run;
 }
 
-$("#comuna").change(function (e) {
-    //cod_comuna se ocupa como "pivote" al momento de cambiar a seleccion de comuna, esto porque al momento de buscar los datos por el maestro pacientes
-    //al llenar los datos de comuna, no se pudo inicializar automaricamente el select ajax en el valor determinado, por lo tanto se inicia como input
-    document.getElementById("cod_comuna").value = e.target.value;
-    try {
-        document.getElementById("tx_comuna").value = e.target.options[e.target.options.selectedIndex].text;
-    } catch (error) {
-        console.log(error);
-    }
-});
+// $("#comuna").change(function (e) {
+//     //cod_comuna se ocupa como "pivote" al momento de cambiar a seleccion de comuna, esto porque al momento de buscar los datos por el maestro pacientes
+//     //al llenar los datos de comuna, no se pudo inicializar automaricamente el select ajax en el valor determinado, por lo tanto se inicia como input
+//     document.getElementById("cod_comuna").value = e.target.value;
+//     try {
+//         document.getElementById("tx_comuna").value = e.target.options[e.target.options.selectedIndex].text;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 
 $("#rut").change(function (e) {
     document.getElementById('nombres').readOnly = false;

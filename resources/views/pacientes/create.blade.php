@@ -47,6 +47,10 @@
                             $d1 = route('consultas.db', ['id' => 'rutaca']).';'.route('consultas.fon', ['id' => 'rutaca']);
                             @endphp
 							
+							<input name="rut_existe" id="rut_existe" type="hidden" value=false>
+							<input name="es_fonasa" id="es_fonasa" type="hidden" value=false>
+							<input name="es_maestra" id="es_maestra" type="hidden" value=false>
+
 							<!--Rut-->
 							<div class="form-group{{ $errors->has('run') ? ' has-error' : '' }}" id="divRun">
 								<label for="run" class="col-md-4 control-label">R.U.N.</label>
@@ -71,7 +75,7 @@
 							<input name="dv" id="dv" type="hidden" value="{{ old('dv') }}">
 							<input name="flujo" id="flujo" type="hidden" value="{{ $flujo }}">
 
-							<input name="rut_existe" id="rut_existe" type="hidden" value=false>
+					
 							
 							<!--Numero de Documento-->
 							<div class="form-group{{ $errors->has('numDoc') ? ' has-error' : '' }}" id="divNumDoc" hidden>
@@ -103,30 +107,30 @@
 							</div>
 							
 							<!--Apellido Paterno-->
-							<div class="form-group{{ $errors->has('apellido_paterno') ? ' has-error' : '' }}">
-								<label for="apellido_paterno" class="col-md-4 control-label">Apellido Paterno</label>
+							<div class="form-group{{ $errors->has('apPaterno') ? ' has-error' : '' }}">
+								<label for="apPaterno" class="col-md-4 control-label">Apellido Paterno</label>
 
 								<div class="col-md-8">
-									<input id="apellido_paterno" type="text" class="form-control" name="apellido_paterno" value="{{ old('apellido_paterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
+									<input id="apPaterno" type="text" class="form-control" name="apPaterno" value="{{ old('apPaterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
 
-									@if ($errors->has('apellido_paterno'))
+									@if ($errors->has('apPaterno'))
 										<span class="help-block">
-											<strong>{{ $errors->first('apellido_paterno') }}</strong>
+											<strong>{{ $errors->first('apPaterno') }}</strong>
 										</span>
 									@endif
 								</div>
 							</div>
 							
 							<!--Apellido Materno-->
-							<div class="form-group{{ $errors->has('apellido_materno') ? ' has-error' : '' }}">
-								<label for="apellido_materno" class="col-md-4 control-label">Apellido Materno</label>
+							<div class="form-group{{ $errors->has('apMaterno') ? ' has-error' : '' }}">
+								<label for="apMaterno" class="col-md-4 control-label">Apellido Materno</label>
 
 								<div class="col-md-8">
-									<input id="apellido_materno" type="text" class="form-control" name="apellido_materno" value="{{ old('apellido_materno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
+									<input id="apMaterno" type="text" class="form-control" name="apMaterno" value="{{ old('apMaterno') }}" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required autofocus>
 
-									@if ($errors->has('apellido_materno'))
+									@if ($errors->has('apMaterno'))
 										<span class="help-block">
-											<strong>{{ $errors->first('apellido_materno') }}</strong>
+											<strong>{{ $errors->first('apMaterno') }}</strong>
 										</span>
 									@endif
 								</div>
