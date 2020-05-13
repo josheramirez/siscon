@@ -369,6 +369,7 @@ function consultar(d1) {
                                     // USUARIO ENCONTRADO en FONASA
                                     $("#rut_existe").val(true);
                                     $("#es_fonasa").val(true);
+                                    $("#es_maestra").val(false);
                                     toastr.success('Paciente encontrado!');
                                     datos_afiliado = data['RESPUESTA_ORIGINAL']['afiliadoTO'];
                                     resp_original = data['RESPUESTA_ORIGINAL'];
@@ -466,6 +467,8 @@ function consultar(d1) {
                 
                     $("#rut_existe").val(true);
                     $("#es_maestra").val(true);
+                    $("#es_fonasa").val(false);
+
                     toastr.success('Paciente encontrado!');
                     edad = data['edad'];
                     comuna = data['desc_comuna'];
